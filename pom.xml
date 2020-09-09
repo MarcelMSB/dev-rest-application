@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <groupId>dev.marcel</groupId>
+    <artifactId>rest-application</artifactId>
+    <packaging>war</packaging>
+    
+    <name>API : Rest Application : ${project.version}</name> 
+    <version>1.0.0</version>
+
+    <organization>
+        <name>Marcel de Souza Borges</name>
+        <url>http://marcel.dev.br/</url>
+    </organization>
+
+    <scm>
+        <connection>scm:git:</connection>
+        <developerConnection>scm:git:</developerConnection>
+        <url></url>
+    </scm>
+
+    <properties>
+        <environment>local</environment>
+        
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+              
+        <local.http.port>10000</local.http.port>
+        <local.java.debug.port>10001</local.java.debug.port>        
+        <project.tmpdir>target/tmpdir</project.tmpdir>
+        
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        
+        <!-- Maven dependencies -->
+        <version.maven-resources-plugin>2.7</version.maven-resources-plugin>
+        <version.maven-assembly>2.5.4</version.maven-assembly>
+        <version.mysema-apt-maven-plugin>1.1.2</version.mysema-apt-maven-plugin>        
+        <version.maven-ejb-plugin>2.4</version.maven-ejb-plugin>
+        <version.maven-install-plugin>2.5.2</version.maven-install-plugin>
+
+        <querydsl.outputDirectory>target/generated-sources/querydsl</querydsl.outputDirectory>
+        <querydsl.outputTestDirectory>target/generated-test-sources/querydsl</querydsl.outputTestDirectory>
+
+        <!-- Swarm dependencies -->
+        <version.wildfly.swarm>2018.5.0</version.wildfly.swarm>
+
+        <!-- JEE dependencies -->
+        <version.javaee-api>7.0</version.javaee-api>
+
+        <!-- Global dependencies -->       
+        <version.hibernate-core>5.4.10.Final</version.hibernate-core>
+        <version.hibernate-jpa>1.0.0.Final</version.hibernate-jpa>       
+        <version.cdi-api>1.2</version.cdi-api>
+        <version.jboss-jaxrs-api>1.0.0.Final</version.jboss-jaxrs-api>
+        <version.jboss-transaction-api>1.0.1.Final</version.jboss-transaction-api>
+        <version.jboss-logging>3.3.0.Final</version.jboss-logging>
+        <version.log4j>1.2.17</version.log4j>
+        <version.cors-filter>1.0.1</version.cors-filter>
+        <version.javaslang>2.0.2</version.javaslang>
+        <version.ejb>3.1</version.ejb>
+        <version.commons-io>2.6</version.commons-io>
+        <version.hibernate-types>2.6.1</version.hibernate-types>       
+        <version.jackson-coreutils>1.8</version.jackson-coreutils>
+        <version.jackson-dataformat>2.8.7</version.jackson-dataformat>
+        <version.jackson-datatype-jsr310>2.5.1</version.jackson-datatype-jsr310>
+        <version.jackson-datatype-threetenbp>2.4.4</version.jackson-datatype-threetenbp>
+        <version.jackson-module-jaxb-annotations>2.4.4</version.jackson-module-jaxb-annotations>
+        <version.jackson-core-dsl>1.9.13</version.jackson-core-dsl>
+        <version.json-simple>1.1</version.json-simple>
+        <version.postgresql>42.2.6</version.postgresql>
+        <version.querydsl>3.3.2</version.querydsl>
+        <version.guava>18.0</version.guava>
+        
+        <!-- Feign dependencies -->
+        <version.netflix-feign>8.16.2</version.netflix-feign>
+        <version.feign-form>3.4.0</version.feign-form>
+        
+        <!-- Test dependencies -->
+        <version.hibernate-validator>5.3.5.Final</version.hibernate-validator>
+        <version.cdi-unit>2.2.1</version.cdi-unit>
+        <version.junit>4.12</version.junit>
+        <version.mockito>1.9.5</version.mockito>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>           
+            <!-- Java EE 7 dependencies -->
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>${version.javaee-api}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.enterprise</groupId>
+                <artifactId>cdi-api</artifactId>
+                <version>${version.cdi-api}</version>
+                <scope>provided</scope>
+            </dependency>
+            
+            <!-- WildFly Swarm dependencies -->
+            <dependency>
+                <groupId>org.wildfly.swarm</groupId>
+                <artifactId>bom-all</artifactId>
+                <version>${version.wildfly.swarm}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+                        
+            <!-- WildFly Swarm fractions dependencies -->
+            <dependency>
+                <groupId>org.wildfly.swarm</groupId>
+                <artifactId>jaxrs</artifactId>
+                <version>${version.wildfly.swarm}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.swarm</groupId>
+                <artifactId>jaxrs-multipart</artifactId>
+                <version>${version.wildfly.swarm}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.swarm</groupId>
+                <artifactId>cdi</artifactId>
+                <version>${version.wildfly.swarm}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.swarm</groupId>
+                <artifactId>messaging</artifactId>
+                <version>${version.wildfly.swarm}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.swarm</groupId>
+                <artifactId>jpa</artifactId>
+                <version>${version.wildfly.swarm}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.swarm</groupId>
+                <artifactId>ejb</artifactId>
+                <version>${version.wildfly.swarm}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.swarm</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${version.wildfly.swarm}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.swarm</groupId>
+                <artifactId>datasources</artifactId>
+                <version>${version.wildfly.swarm}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.swarm</groupId>
+                <artifactId>infinispan</artifactId>
+                <version>${version.wildfly.swarm}</version>
+            </dependency>
+
+            <!-- Server dependencies -->
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${version.hibernate-core}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.1-api</artifactId>
+                <version>${version.hibernate-jpa}</version>
+                <scope>provided</scope>
+            </dependency>                                          
+            <dependency>
+                <groupId>org.jboss.spec.javax.ws.rs</groupId>
+                <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+                <version>${version.jboss-jaxrs-api}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.spec.javax.transaction</groupId>
+                <artifactId>jboss-transaction-api_1.2_spec</artifactId>
+                <version>${version.jboss-transaction-api}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.logging</groupId>
+                <artifactId>jboss-logging</artifactId>
+                <version>${version.jboss-logging}</version>
+            </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${version.log4j}</version>
+            </dependency>
+           
+            <!-- querydsl dependencies -->
+            <dependency>
+                <groupId>com.mysema.querydsl</groupId>
+                <artifactId>querydsl-apt</artifactId>
+                <version>${version.querydsl}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.mysema.querydsl</groupId>
+                <artifactId>querydsl-jpa</artifactId>
+                <version>${version.querydsl}</version>
+            </dependency>
+            
+            <!-- Dependências de Execução -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${version.guava}</version>
+            </dependency>
+        
+            <!-- Global dependencies -->
+            <dependency>
+                <groupId>io.javaslang</groupId>
+                <artifactId>javaslang</artifactId>
+                <version>${version.javaslang}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${version.commons-io}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ebaysf.web</groupId>
+                <artifactId>cors-filter</artifactId>
+                <version>${version.cors-filter}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.joschi.jackson</groupId>
+                <artifactId>jackson-datatype-threetenbp</artifactId>
+                <version>${version.jackson-datatype-threetenbp}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${version.jackson-datatype-jsr310}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jaxb-annotations</artifactId>
+                <version>${version.jackson-module-jaxb-annotations}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${version.jackson-dataformat}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-core-asl</artifactId>
+                <version>${version.jackson-core-dsl}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fge</groupId>
+                <artifactId>jackson-coreutils</artifactId>
+                <version>${version.jackson-coreutils}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.code.findbugs</groupId>
+                        <artifactId>jsr305</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>guava</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.json-simple</groupId>
+                <artifactId>json-simple</artifactId>
+                <version>${version.json-simple}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vladmihalcea</groupId>
+                <artifactId>hibernate-types-52</artifactId>
+                <version>${version.hibernate-types}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${version.postgresql}</version>
+            </dependency>
+            
+            <!-- Feign dependencies -->
+            <dependency>
+                <groupId>com.netflix.feign</groupId>
+                <artifactId>feign-jackson</artifactId>
+                <version>${version.netflix-feign}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.feign</groupId>
+                <artifactId>feign-core</artifactId>
+                <version>${version.netflix-feign}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.feign</groupId>
+                <artifactId>feign-jaxrs</artifactId>
+                <version>${version.netflix-feign}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign.form</groupId>
+                <artifactId>feign-form</artifactId>
+                <version>${version.feign-form}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.code.findbugs</groupId>
+                        <artifactId>jsr305</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            
+            <!-- Test dependencies -->
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${version.hibernate-validator}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jglue.cdi-unit</groupId>
+                <artifactId>cdi-unit</artifactId>
+                <version>${version.cdi-unit}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${version.junit}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${version.mockito}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- Java EE 7 dependencies -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+        </dependency>
+
+        <!-- Server dependencies -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+        </dependency>                                          
+        <dependency>
+            <groupId>org.jboss.spec.javax.ws.rs</groupId>
+            <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.transaction</groupId>
+            <artifactId>jboss-transaction-api_1.2_spec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        
+        <!-- WildFly Swarm fractions dependencies -->
+        <dependency>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>cdi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>jaxrs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>messaging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>ejb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>datasources</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>infinispan</artifactId>
+        </dependency>
+        
+        <!-- querydsl dependencies -->
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+        </dependency>
+        
+        <!-- Dependências de Execução -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+            
+        <!-- Global dependencies -->
+        <dependency>
+            <groupId>io.javaslang</groupId>
+            <artifactId>javaslang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ebaysf.web</groupId>
+            <artifactId>cors-filter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.joschi.jackson</groupId>
+            <artifactId>jackson-datatype-threetenbp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fge</groupId>
+            <artifactId>jackson-coreutils</artifactId>         
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-52</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        
+        <!-- Feign dependencies -->
+        <dependency>
+            <groupId>com.netflix.feign</groupId>
+            <artifactId>feign-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.netflix.feign</groupId>
+            <artifactId>feign-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.netflix.feign</groupId>
+            <artifactId>feign-jaxrs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign.form</groupId>
+            <artifactId>feign-form</artifactId>
+        </dependency>
+            
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.jglue.cdi-unit</groupId>
+            <artifactId>cdi-unit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>   
+        <plugins>
+            <!-- Habilita a geração de metadados para o QueryDSL-->
+            <plugin>
+                <groupId>com.mysema.maven</groupId>
+                <artifactId>apt-maven-plugin</artifactId>
+                <version>${version.mysema-apt-maven-plugin}</version>
+                <executions>
+                    <execution>
+                        <id>process</id>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${querydsl.outputDirectory}</outputDirectory>
+                            <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+                            <logOnlyOnError>true</logOnlyOnError>
+                            <options>
+                                <querydsl.entityAccessors>true</querydsl.entityAccessors>
+                            </options>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-process</id>
+                        <goals>
+                            <goal>test-process</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${querydsl.outputTestDirectory}</outputDirectory>
+                            <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+                            <logOnlyOnError>true</logOnlyOnError>
+                            <options>
+                                <querydsl.entityAccessors>true</querydsl.entityAccessors>
+                            </options>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ejb-plugin</artifactId>
+                <version>${version.maven-ejb-plugin}</version>
+                <configuration>
+                    <ejbVersion>${version.ejb}</ejbVersion>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>test</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>${version.maven-war-plugin}</version>
+                        <configuration>
+                            <packagingExcludes>
+                                WEB-INF/classes/project-defaults.yml
+                            </packagingExcludes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.wildfly.swarm</groupId>
+                        <artifactId>wildfly-swarm-plugin</artifactId>
+                        <version>${version.wildfly.swarm}</version>
+                        <configuration>
+                            <mainClass>com.betha.Main</mainClass>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>package</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>local</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>generate-sources</id>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <tasks>
+                                        <mkdir dir="${project.tmpdir}"/>
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.wildfly.swarm</groupId>
+                        <artifactId>wildfly-swarm-plugin</artifactId>
+                        <version>${version.wildfly.swarm}</version>
+                        <configuration>
+                            <jvmArguments>
+                                <jvmArgument>-Xms512m</jvmArgument>
+                                <jvmArgument>-Xmx768m</jvmArgument>
+                                <jvmArgument>-XX:MaxMetaspaceSize=256M</jvmArgument>
+                                <jvmArgument>-Djava.net.preferIPv4Stack=true</jvmArgument>
+                                <jvmArgument>-Dswarm.http.port=${local.http.port}</jvmArgument>
+                                <jvmArgument>
+                                    -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${local.java.debug.port}
+                                </jvmArgument>
+                                <jvmArgument>-Djava.io.tmpdir=${project.tmpdir}</jvmArgument>
+                                <jvmArgument>
+                                    -Dssl.hosts=dev.betha.com.br,test.betha.com.br,pendenciascadastrais.dev.bethacloud.com.br,s3-sa-east-1.amazonaws.com
+                                </jvmArgument>
+                                <jvmArgument>-Doauth.noValidationToken=true</jvmArgument>
+                                <jvmArgument>-Djavax.net.ssl.trustStorePassword=123456</jvmArgument>
+                            </jvmArguments>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>package</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

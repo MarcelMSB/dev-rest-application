@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action>
+        <actionName>CUSTOM-Install [SkipTests]</actionName>
+        <displayName>Install [SkipTests]</displayName>
+        <goals>
+            <goal>install</goal>
+        </goals>
+        <properties>
+            <maven.test.skip>true</maven.test.skip>
+        </properties>
+    </action>
+    <action>
+        <actionName>CUSTOM-Clean and Install [SkipTests]</actionName>
+        <displayName>Clean and Install [SkipTests]</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+        </goals>
+        <properties>
+            <maven.test.skip>true</maven.test.skip>
+        </properties>
+    </action>
+</actions>

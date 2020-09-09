@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/web-app_3_1.xsd">
+    <filter>
+        <filter-name>CORSFilter</filter-name>
+        <filter-class>org.ebaysf.web.cors.CORSFilter</filter-class>
+        <init-param>
+            <description>A comma separated list of HTTP verbs, using which a CORS request can be made.</description>
+            <param-name>cors.allowed.methods</param-name>
+            <param-value>HEAD,GET,POST,PUT,DELETE,PATCH,OPTIONS</param-value>
+        </init-param>
+        <init-param>
+            <description>A comma separated list of allowed headers when making a non simple CORS request.</description>
+            <param-name>cors.allowed.headers</param-name>
+            <param-value>Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,App-Context,App-Links,Authorization,User-Access</param-value>
+        </init-param>
+        <init-param>
+            <description>A comma separated list non-standard response headers that will be exposed to XHR2 object.</description>
+            <param-name>cors.exposed.headers</param-name>
+            <param-value>X-Bth-Info-Messages,X-Bth-Error-Messages,X-Bth-Warn-Messages,X-Bth-Success-Messages</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CORSFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+</web-app>

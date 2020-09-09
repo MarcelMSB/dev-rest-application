@@ -1,0 +1,28 @@
+swarm:
+  logging:
+    root-logger:
+      level: SEVERE
+    loggers:
+      org.hibernate.sql:
+        level: INFO
+      dev.marcel.application.web.resource.common.enterprise.MyLoggingFilter:
+        level: TRACE
+  datasources:   
+    jdbc-drivers:
+      org.postgresql:
+        driver-class-name: org.postgresql.Driver
+        xa-datasource-class-name: org.postgresql.xa.PGXADataSource
+        driver-module-name: org.postgresql
+    data-sources:
+      EscrituracaoDS:
+        jndi-name: java:jboss/datasources/appDS 
+        driver-name: org.postgresql
+        connection-url: jdbc:postgresql://localhost:5432/postgres
+        user-name: postgres
+        password: admin
+  naming:
+    bindings:
+      'java:global/ibge/host':
+        value: 'http://servicodados.ibge.gov.br/api/v1/localidades'
+        type: java.lang.String
+        binding-type: simple
